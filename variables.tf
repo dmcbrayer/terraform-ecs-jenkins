@@ -32,7 +32,7 @@ variable "amis" {
 }
 
 variable "instance_type" {
-  default = "t2.micro"
+  default = "t2.medium"
 }
 
 variable "key_name" {
