@@ -4,6 +4,8 @@ provider "aws" {
   region = "${var.region}"
 }
 
+data "aws_availability_zones" "all" {}
+
 resource "aws_vpc" "jenkins" {
   cidr_block = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -100,14 +102,18 @@ resource "aws_ecs_cluster" "jenkins" {
 
 resource "aws_autoscaling_group" "asg_jenkins" {
   name = "asg_${var.ecs_cluster_name}"
+
   availability_zones = ["${var.availability_zone}"]
   min_size = "${var.min_instance_size}"
   max_size = "${var.max_instance_size}"
   desired_capacity = "${var.desired_instance_capacity}"
-  health_check_type = "EC2"
-  health_check_grace_period = 300
+
   launch_configuration = "${aws_launch_configuration.lc_jenkins.name}"
   vpc_zone_identifier = ["${aws_subnet.jenkins.id}"]
+
+  load_balancers = ["${aws_elb.lb_jenkins.name}"]
+  health_check_type = "ELB"
+  health_check_grace_period = 300
 
   lifecycle {
     create_before_destroy = true
@@ -144,6 +150,28 @@ resource "aws_launch_configuration" "lc_jenkins" {
 
   lifecycle {
     create_before_destroy = true
+  }
+}
+
+resource "aws_elb" "lb_jenkins" {
+  name = "elb-${var.ecs_cluster_name}"
+  security_groups = ["${aws_security_group.sg_jenkins.id}"]
+  subnets = ["${aws_subnet.jenkins.id}"]
+
+  health_check {
+    healthy_threshold = 2
+    unhealthy_threshold = 2
+    timeout = 3
+    interval = 30
+    target = "HTTP:80/login"
+  }
+
+  listener {
+    instance_port      = 80
+    instance_protocol  = "http"
+    lb_port            = 443
+    lb_protocol        = "https"
+    ssl_certificate_id = "arn:aws:acm:us-east-1:527214449657:certificate/7edd805a-3249-4a93-9f1b-18820a3cf595"
   }
 }
 

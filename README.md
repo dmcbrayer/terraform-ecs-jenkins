@@ -63,6 +63,12 @@ To work around this, you can manually run the restore backup command on the Jenk
     -v /ecs/jenkins-home:/opt/dest \
     garland/docker-s3cmd
 
+## Unlocking jenkins
+
+SSH into your instance:
+
+`sudo cat /ecs/jenkins-home/secrets/initialAdminPassword`
+
 
 ## Credits
 
