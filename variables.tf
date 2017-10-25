@@ -24,23 +24,18 @@ variable "ecs_cluster_name" {
 variable "amis" {
   description = "Which AMI to spawn. Defaults to the AWS ECS optimized images."
   default = {
-    us-east-1 = "ami-8f7687e2"
-    us-west-1 = "ami-bb473cdb"
-    us-west-2 = "ami-84b44de4"
-    eu-west-1 = "ami-4e6ffe3d"
-    eu-central-1 = "ami-b0cc23df"
-    ap-northeast-1 = "ami-095dbf68"
-    ap-southeast-1 = "ami-cf03d2ac"
-    ap-southeast-2 = "ami-697a540a"
+    us-east-1 = "ami-ec33cc96"
+    us-east-2 = "ami-34032e51"
+    us-west-1 = "ami-d5d0e0b5"
+    us-west-2 = "ami-29f80351"
   }
 }
 
 variable "instance_type" {
-  default = "t2.medium"
+  default = "t2.micro"
 }
 
 variable "key_name" {
-  default = "devops-tf"
   description = "SSH key name in your AWS account for AWS instances."
 }
 
@@ -65,7 +60,7 @@ variable "desired_service_count" {
 }
 
 variable "s3_bucket" {
-  default = "mycompany-jenkins"
+  default = "blast-jenkins"
   description = "S3 bucket where remote state and Jenkins data will be stored."
 }
 
@@ -74,7 +69,3 @@ variable "restore_backup" {
   description = "Whether or not to restore Jenkins backup."
 }
 
-variable "jenkins_repository_url" {
-  default = "jenkins"
-  description = "ECR Repository for Jenkins."
-}

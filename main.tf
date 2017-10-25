@@ -4,15 +4,6 @@ provider "aws" {
   region = "${var.region}"
 }
 
-data "terraform_remote_state" "tfstate" {
-  backend = "s3"
-  config {
-    bucket = "mycompany-terraform"
-    key = "jenkins/terraform.tfstate"
-    region = "us-east-1"
-  }
-}
-
 resource "aws_vpc" "jenkins" {
   cidr_block = "10.0.0.0/16"
   enable_dns_hostnames = true
