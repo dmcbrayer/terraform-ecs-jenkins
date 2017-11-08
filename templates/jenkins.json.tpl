@@ -1,7 +1,7 @@
 [
   {
     "name": "jenkins",
-    "image": "jenkins:2.3",
+    "image": "jenkins/jenkins:lts",
     "cpu": 128,
     "memory": 1024,
     "essential": true,
